@@ -1,7 +1,7 @@
 var trex, trex_running, trex_collided;
 var ground, invisibleGround, groundImage;
 var cloud, cloudsGroup, cloudImage;
-var cacto, ancacto1, ancacto2, ancacto3, ancacto4, ancacto5, ancacto6;
+var cacto, ancacto1, ancacto2, ancacto3, ancacto4, ancacto5, ancacto6, cactosGroup;
 var nome;
 var newImage;
 var randomico;
@@ -26,6 +26,10 @@ function preload(){
 
 function setup() {
     createCanvas(600, 200);
+
+    cloudsGroup = new Group();
+    cactosGroup = new Group();
+
 
     trex = createSprite(50,160,20,50);
     trex.addAnimation("running", trex_running);
@@ -77,6 +81,7 @@ function spawnClouds() {
         cloud.scale = 0.5;
         cloud.velocityX = -1.5;
         cloud.lifetime = 400;    
+        cloudsGroup.add(cloud);
     }
 }
 
@@ -110,6 +115,8 @@ function spawnCactos(){
             default:
                 break;
         }
+        
+        cactosGroup.add(cacto);
     }
 }
 
