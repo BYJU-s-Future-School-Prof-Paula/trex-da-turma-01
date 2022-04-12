@@ -1,4 +1,4 @@
-var trex, trex_running, trex_collided;
+var trex, trex_running, trex_colidiu;
 var ground, invisibleGround, groundImage;
 var cloud, cloudsGroup, cloudImage;
 var cacto, ancacto1, ancacto2, ancacto3, ancacto4, ancacto5, ancacto6, cactosGroup;
@@ -7,9 +7,16 @@ var newImage;
 var randomico;
 var saltos = 0;
 
+var JOGANDO = 1;
+var GAMEOVER = 0;
+
+var estado = JOGANDO;
+var gameoverImage, gameover;
+var resetImage, reset;
+
 function preload(){
     trex_running = loadAnimation("trex1.png","trex3.png","trex4.png");
-    trex_collided = loadAnimation("trex_collided.png");
+    trex_colidiu = loadAnimation("trex_collided.png");
     
     groundImage = loadImage("ground2.png");
     
@@ -21,6 +28,9 @@ function preload(){
     ancacto4 = loadImage("obstacle4.png");
     ancacto5 = loadImage("obstacle5.png");
     ancacto6 = loadImage("obstacle6.png");
+
+    gameoverImage = loadImage("gameOver.png");
+    resetImage = loadImage("restart.png");
  
 }
 
@@ -30,10 +40,20 @@ function setup() {
     cloudsGroup = new Group();
     cactosGroup = new Group();
 
+    reset = createSprite(300,150,10,10);
+    reset.addImage(resetImage);
+    reset.scale=0.6;
+    reset.visible = false;
+    
+    gameover = createSprite(300,90,10,10);
+    gameover.addImage(gameoverImage);
+    gameover.scale=0.6;
+    gameover.visible = false;
+    
 
     trex = createSprite(50,160,20,50);
     trex.addAnimation("running", trex_running);
-    // trex.adicionarAnimação("colidiu",trex_colidiu)
+    trex.addAnimation("bateu", trex_colidiu);
     trex.scale = 0.5;
     
     ground = createSprite(200,180,400,20);
@@ -49,26 +69,46 @@ function setup() {
 
 function draw() {
     background(180);
-    pontuacao();
     randomico = Math.round(random(1,6));
-    if(keyDown("space") && trex.y>=160) {
-        trex.velocityY = -10;
-    }
-  
-    trex.velocityY = trex.velocityY + 0.8
-  
-    if (ground.x < 0){
-        ground.x = ground.width/2;
-    }
-  
-    trex.collide(invisibleGround);
-  
-    //gerar as nuvens
     spawnClouds();
-    spawnCactos();
-    drawSprites();
     ver_mouse();
+    
+    if (estado === JOGANDO){
+        pontuacao();
+        pula_dinossauro_pula();
+        chao_infinito();
+        trex.collide(invisibleGround);
+        spawnCactos();
 
+        if(trex.isTouching(cactosGroup)){
+            estado = GAMEOVER;
+        }
+
+    }else if(estado === GAMEOVER){
+        //exibir game over e bota reset
+        reset.visible = true;
+        gameover.visible = true;
+        //dinossauro morre
+        trex.changeAnimation("bateu", trex_colidiu);
+
+        //dino para
+        trex.velocityX =0;
+        trex.velocityY =0;
+
+        //chao para
+        ground.velocityX = 0;
+
+        //nuvens param
+        cloudsGroup.setVelocityXEach(0);
+
+        //cactos param
+        cactosGroup.setVelocityXEach(0);
+
+    }
+
+
+
+    drawSprites();
     text("Pontuação: "+saltos, 500,68);
 }
 
@@ -131,7 +171,19 @@ function pontuacao(){
 
 }
 
+function pula_dinossauro_pula(){
+    if(keyDown("space") && trex.y>=160) {
+        trex.velocityY = -10;
+    }
+  
+    trex.velocityY = trex.velocityY + 0.8
+}
 
+function chao_infinito(){
+    if (ground.x < 0){
+        ground.x = ground.width/2;
+    }
+}
 
 
 
