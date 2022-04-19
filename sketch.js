@@ -59,7 +59,7 @@ function setup() {
     ground = createSprite(200,180,400,20);
     ground.addImage("ground",groundImage);
     ground.x = ground.width /2;
-    ground.velocityX = -4;
+    ground.velocityX = -6;
     
     invisibleGround = createSprite(200,190,400,10);
     invisibleGround.visible = false;
@@ -104,6 +104,10 @@ function draw() {
         //cactos param
         cactosGroup.setVelocityXEach(0);
 
+        //nuvens e cactos pararem de sumir
+        cloudsGroup.setLifetimeEach(-1);
+        cactosGroup.setLifetimeEach(-1);
+
     }
 
 
@@ -115,11 +119,11 @@ function draw() {
 function spawnClouds() {
   //escreva o código aqui para gerar as nuvens
     if (frameCount % 150 === 0) {
-        cloud = createSprite(610,100,40,10);
+        cloud = createSprite(625,100,40,10);
         cloud.addImage(cloudImage)
         cloud.y = Math.round(random(10,60))
         cloud.scale = 0.5;
-        cloud.velocityX = -1.5;
+        cloud.velocityX = -1;
         cloud.lifetime = 400;    
         cloudsGroup.add(cloud);
     }
@@ -129,7 +133,7 @@ function spawnCactos(){
     if(frameCount % 100 === 0){
         cacto = createSprite(610, 165 ,10,40);
         cacto.scale = 0.5;
-        cacto.velocityX = -4;
+        cacto.velocityX = -6;
         cacto.lifetime = 300;
 
         switch(randomico){
@@ -173,10 +177,10 @@ function pontuacao(){
 
 function pula_dinossauro_pula(){
     if(keyDown("space") && trex.y>=160) {
-        trex.velocityY = -10;
+        trex.velocityY = -12;
     }
   
-    trex.velocityY = trex.velocityY + 0.8
+    trex.velocityY = trex.velocityY + 0.8;
 }
 
 function chao_infinito(){
@@ -184,7 +188,6 @@ function chao_infinito(){
         ground.x = ground.width/2;
     }
 }
-
 
 
 
