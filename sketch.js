@@ -55,7 +55,9 @@ function setup() {
     trex.addAnimation("running", trex_running);
     trex.addAnimation("bateu", trex_colidiu);
     trex.scale = 0.5;
-    
+    trex.debug = true;
+    trex.setCollider("circle", 0,0,40);
+
     ground = createSprite(200,180,400,20);
     ground.addImage("ground",groundImage);
     ground.x = ground.width /2;
@@ -92,8 +94,8 @@ function draw() {
         trex.changeAnimation("bateu", trex_colidiu);
 
         //dino para
-        trex.velocityX =0;
-        trex.velocityY =0;
+        trex.velocityX = 0;
+        trex.velocityY = 0;
 
         //chao para
         ground.velocityX = 0;
