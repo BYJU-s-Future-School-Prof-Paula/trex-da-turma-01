@@ -13,11 +13,12 @@ var GAMEOVER = 0;
 var estado = JOGANDO;
 var gameoverImage, gameover;
 var resetImage, reset;
+var som_pulo, som_morte, som_checkpoint;
 
 function preload(){
     trex_running = loadAnimation("trex1.png","trex3.png","trex4.png");
     trex_colidiu = loadAnimation("trex_collided.png");
-    
+
     groundImage = loadImage("ground2.png");
     
     cloudImage = loadImage("cloud.png");
@@ -31,6 +32,10 @@ function preload(){
 
     gameoverImage = loadImage("gameOver.png");
     resetImage = loadImage("restart.png");
+
+    som_pulo = loadSound("jump.mp3");
+    som_checkpoint = loadSound("checkpoint.mp3");
+    som_morte = loadSound("die.mp3");
  
 }
 
@@ -55,7 +60,7 @@ function setup() {
     trex.addAnimation("running", trex_running);
     trex.addAnimation("bateu", trex_colidiu);
     trex.scale = 0.5;
-    trex.debug = true;
+    trex.debug = false;
     trex.setCollider("circle", 0,0,40);
 
     ground = createSprite(200,180,400,20);
@@ -84,6 +89,7 @@ function draw() {
 
         if(trex.isTouching(cactosGroup)){
             estado = GAMEOVER;
+            som_morte.play();
         }
 
     }else if(estado === GAMEOVER){
@@ -175,11 +181,16 @@ function pontuacao(){
         saltos = saltos+1;
     }
 
+    if(saltos%100===0 && saltos>0){
+        som_checkpoint.play();
+    }
+
 }
 
 function pula_dinossauro_pula(){
     if(keyDown("space") && trex.y>=160) {
         trex.velocityY = -12;
+        som_pulo.play();
     }
   
     trex.velocityY = trex.velocityY + 0.8;
